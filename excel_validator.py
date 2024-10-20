@@ -2,7 +2,7 @@ import pandas as pd
 
 # Leer el archivo Excel
 try:
-    data = pd.read_excel("datoscasimal.xlsx")
+    data = pd.read_excel("datosNumero.xlsx")
 except FileNotFoundError:
     print("El archivo 'datos.xlsx' no se encontró.")
     exit()
@@ -28,8 +28,13 @@ def validar_filas(data):
     # Verifica los datos en las filas si las columnas existen
     if not errores:  # Solo valida filas si no hay errores de columnas
         for index, row in data.iterrows():
-            if pd.isnull(row['NOMBRE']) or pd.isnull(row['MONTO']):
-                errores.append(f"Fila {index + 1}: Datos incompletos")
+            # Verifica que NOMBRE no esté vacío y sea un string
+            if pd.isnull(row['NOMBRE']) or not isinstance(row['NOMBRE'], str):
+                errores.append(f"Fila {index + 1}: 'NOMBRE' debe ser un string ")
+            
+            # Verifica que MONTO no esté vacío y sea un número
+            if pd.isnull(row['MONTO']) or not isinstance(row['MONTO'], (int, float)):
+                errores.append(f"Fila {index + 1}: 'MONTO' debe ser un número ")
     
     return errores
 
@@ -40,4 +45,4 @@ if errores:
     for error in errores:
         print(error)
 else:
-    print("Datos válidos")
+    print("Datos validados")
